@@ -1,4 +1,4 @@
-const { Worker, isMainThread, parentPort } = require('worker_threads');
+const { Worker, isMainThread, parentPort } = require('Chapter.03/3.5/worker_threads');
 
 if (isMainThread) { // 부모일 때
   const

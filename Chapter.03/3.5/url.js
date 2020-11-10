@@ -1,4 +1,4 @@
-const url = require('url');
+const url = require('Chapter.03/3.5/url');
 const { URL } = url;
 const myURL = new URL('http://www.gilbut.co.kr/book/bookList.aspx?sercate1=001001000#anchor');
 console.log('new URL():', myURL);

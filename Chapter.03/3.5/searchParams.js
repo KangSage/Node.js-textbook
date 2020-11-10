@@ -1,4 +1,4 @@
-const { URL } = require('url');
+const { URL } = require('Chapter.03/3.5/url');
 
 const myURL = new URL('http://www.gilbut.co.kr/?page=3&limit=10&category=nodejs&category=javascript');
 console.log('searchParams', myURL.searchParams);

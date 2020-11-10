@@ -1,4 +1,4 @@
-const util = require('util');
+const util = require('Chapter.03/3.5/util');
 const crypto = require('crypto');
                   // deprecated 처리 되었음을 알림.
 const dontUseMe = util.deprecate((x, y) => {

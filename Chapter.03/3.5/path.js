@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('Chapter.03/3.5/path');
 const string = __filename;
 
 console.log('path.sep:', path.sep);
