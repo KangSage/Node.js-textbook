@@ -42,5 +42,5 @@ myEvent.on('event5', listener);
 myEvent.removeListener('event5', listener);
 myEvent.emit('event5'); // 실행 안 됨
 
-            // 이벤트에 연결된 리스너 갯수 확인
+// 이벤트에 연결된 리스너 갯수 확인
 console.log(myEvent.listenerCount('event2'));
