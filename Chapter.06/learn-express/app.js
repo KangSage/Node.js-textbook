@@ -7,10 +7,26 @@ const multer = require('multer');
 const fs = require('fs');
 const dotenv = require('dotenv');
 const path = require('path');
+const nunjucks = require('nunjucks');
 
 dotenv.config();
+
+const indexRouter = require('./routes'); // index.js는 생략 가능
+const userRouter = require('./routes/user');
+
 const app = express();
 app.set('port', process.env.PORT || 3000);
+
+// set view engine
+app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'pug');
+
+// set nunjucks
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+  express: app,
+  watch: true
+});
 
 // morgan - 로깅 정책 개발 환경: dev, 배포 환경: combined 그 외: common, short, tiny
 app.use(morgan('dev'));
@@ -55,6 +71,38 @@ app.use(session({
   // store:
 }));
 
+app.use('/', indexRouter);
+app.use('/user', userRouter);
+
+app.route('/abc')
+  .get((req, res) => {
+    res.send('GET /abc');
+  })
+  .post((req, res) => {
+    res.send('POST /abc');
+  });
+
+
+// 일치하는 라우터가 없을 때 404 에러 코드를 응답
+// app.use((req, res, next) => {
+//   res.status(404).send('Not Found');
+// });
+
+// nunjucks로 에러 처리
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+// uploads Dir 체크
 try {
   fs.readdirSync('uploads');
 } catch (error) {
