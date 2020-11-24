@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multipart</title>
+</head>
+<body>
+<div>
+  <h2>Single Upload</h2>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="image">
+    <input type="text" name="title">
+    <button type="submit">업로드</button>
+  </form>
+</div>
+<div>
+  <h2>Multiple Upload</h2>
+  <form action="/multiple-upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="many" multiple>
+    <input type="text" name="title">
+    <button type="submit">업로드</button>
+  </form>
+</div>
+<div>
+  <h2>Multi Fields Upload</h2>
+  <form action="/multi-fields-upload" method="post"
+        enctype="multipart/form-data">
+    <input type="file" name="image1">
+    <input type="file" name="image2">
+    <input type="text" name="title">
+    <button type="submit">업로드</button>
+  </form>
+</div>
+</body>
+</html>
