@@ -25,7 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 nunjucks.configure('views', {
   express: app,
-  watch: true
+  watch: true,
 });
 
 // morgan - 로깅 정책 개발 환경: dev, 배포 환경: combined 그 외: common, short, tiny
@@ -52,36 +52,38 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // express-session 1.5 버전 이전에는 내부적으로 cookie-parser를
 // 사용하여 뒤에 와야했으나 현재는 상관 없음.
-app.use(session({
-  // 세션 수정 사항이 생기지 않더라도 재저장 여부
-  resave: false,
-  // 세션에 저장할 내역이 없더라도 처음부터 세션을 생성할지 여부
-  saveUninitialized: false,
-  // 세션 관리용 쿠키의 서명 값: cookie-parser에 넣은 키와 같은 걸 사용
-  secret: process.env.COOKIE_SECRET,
-  cookie: {
-    // 클라이언트에서 확인 불가
-    httpOnly: true,
-    // https 여부
-    secure: false,
-  },
-  // 세션 쿠키의 이름 - 기본 값은 connect.sid
-  name: 'session-cookie',
-  // 세션 클러스터링용 저장소 설정
-  // store:
-}));
+app.use(
+  session({
+    // 세션 수정 사항이 생기지 않더라도 재저장 여부
+    resave: false,
+    // 세션에 저장할 내역이 없더라도 처음부터 세션을 생성할지 여부
+    saveUninitialized: false,
+    // 세션 관리용 쿠키의 서명 값: cookie-parser에 넣은 키와 같은 걸 사용
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      // 클라이언트에서 확인 불가
+      httpOnly: true,
+      // https 여부
+      secure: false,
+    },
+    // 세션 쿠키의 이름 - 기본 값은 connect.sid
+    name: 'session-cookie',
+    // 세션 클러스터링용 저장소 설정
+    // store:
+  })
+);
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 
-app.route('/abc')
+app
+  .route('/abc')
   .get((req, res) => {
     res.send('GET /abc');
   })
   .post((req, res) => {
     res.send('POST /abc');
   });
-
 
 // 일치하는 라우터가 없을 때 404 에러 코드를 응답
 // app.use((req, res, next) => {
@@ -120,7 +122,7 @@ const upload = multer({
     filename(req, file, done) {
       const ext = path.extname(file.originalname);
       done(null, path.basename(file.originalname, ext) + Date.now() + ext);
-    }
+    },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
 });
@@ -138,39 +140,53 @@ app.post('/multiple-upload', upload.array('many'), (req, res) => {
 });
 
 // case of multiple fields
-app.post('/multi-fields-upload', upload.fields([{ name: 'image1'}, { name: 'image2' }]),
-  (req, res) => {
-  console.log(req.files, req.body);
-  res.send('ok');
-});
-
-// case of none
-app.post('/multi-fields-upload', upload.fields([{ name: 'image1'}, { name: 'image2' }]),
+app.post(
+  '/multi-fields-upload',
+  upload.fields([{ name: 'image1' }, { name: 'image2' }]),
   (req, res) => {
     console.log(req.files, req.body);
     res.send('ok');
-  });
+  }
+);
+
+// case of none
+app.post(
+  '/multi-fields-upload',
+  upload.fields([{ name: 'image1' }, { name: 'image2' }]),
+  (req, res) => {
+    console.log(req.files, req.body);
+    res.send('ok');
+  }
+);
 
 app.use((req, res, next) => {
   console.log('모든 요청에 다 실행됩니다.');
   next();
-})
-
-app.get('/', (req, res, next) => {
-  // res.send('Hello, Express');
-  // 쿠키 생성
-  res.cookie('name', 'zerocho', {
-    expires: new Date(Date.now() + 900000),
-    httpOnly: true,
-    secure: true
-  });
-  // 쿠키 삭제
-  res.clearCookie('name', 'zerocho', { httpOnly: true, secure: true, signed: true});
-  console.log('GET / 요청에서만 실행됩니다.');
-  next();
-}, (req, res) => {
-  throw new Error('에러는 에러 처리 미들웨어로 갑니다.');
 });
+
+app.get(
+  '/',
+  (req, res, next) => {
+    // res.send('Hello, Express');
+    // 쿠키 생성
+    res.cookie('name', 'zerocho', {
+      expires: new Date(Date.now() + 900000),
+      httpOnly: true,
+      secure: true,
+    });
+    // 쿠키 삭제
+    res.clearCookie('name', 'zerocho', {
+      httpOnly: true,
+      secure: true,
+      signed: true,
+    });
+    console.log('GET / 요청에서만 실행됩니다.');
+    next();
+  },
+  (req, res) => {
+    throw new Error('에러는 에러 처리 미들웨어로 갑니다.');
+  }
+);
 
 app.use((err, req, res, next) => {
   console.error(err);
