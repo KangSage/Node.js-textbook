@@ -13,7 +13,7 @@ const indexRouter = require('./routes');
 const connect = require('./schemas');
 
 const app = express();
-app.set('port', process.env.PORT || 8005);
+app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
   express: app,
@@ -33,6 +33,7 @@ const sessionMiddleware = session({
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/gif', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -54,7 +55,8 @@ app.use((req, res, next) => {
   next(error);
 });
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
   res.status(err.status || 500);

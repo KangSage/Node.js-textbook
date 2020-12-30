@@ -17,5 +17,7 @@ module.exports = {
     'no-unexpected-multiline': 0,
     'prefer-destructuring': ['error', { object: true, array: false }],
     'operator-linebreak': ['error', 'after'],
+    'object-shorthand': ['warn', 'always'],
+    'implicit-arrow-linebreak': 0,
   },
 };

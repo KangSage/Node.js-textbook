@@ -2,9 +2,8 @@
 
 # Docker로 mongodb 환경 구축하기
 
-```shell
+## Docker-Compose 사용
 
-docker run -d --name [name] -v [file sharing external path]:/data -p 
-27017:27017 mongo:[version]
-
-```
+> ! socket.io 최신 버전인 3.x 이상에서는 해당 코드의 session이 정상 작동 하지 않음  
+> 우선 2.x의 최신 버전인 2.3.0으로 변경 후  
+> 실제 프로젝트에서는 3.x를 사용하되 사용법을 숙지 후 사용할 것

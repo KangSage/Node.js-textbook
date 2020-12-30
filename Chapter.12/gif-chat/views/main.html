@@ -38,7 +38,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   // eslint-disable-next-line no-undef
-  const socket = io.connect('http://localhost:8005/room', { // 네임스페이스
+  const socket = io.connect('http://localhost:8080/room', { // 네임스페이스
     path: '/socket.io',
   });
 
@@ -61,13 +61,10 @@
     const button = document.createElement('button');
     button.textContent = '입장';
     button.dataset.password = data.password ? 'true' : 'false';
-    // eslint-disable-next-line no-underscore-dangle
     button.dataset.id = data._id;
-    // eslint-disable-next-line no-use-before-define
     button.addEventListener('click', addBtnEvent);
     td.appendChild(button);
     tr.appendChild(td);
-    // eslint-disable-next-line no-underscore-dangle
     tr.dataset.id = data._id;
     document.querySelector('table tbody').appendChild(tr); // 화면에 추가
   });
@@ -83,11 +80,10 @@
   function addBtnEvent(e) { // 방 입장 클릭 시
     if (e.target.dataset.password === 'true') {
       const password = prompt('비밀번호를 입력하세요');
-      // eslint-disable-next-line no-restricted-globals
-      location.href = `/room/${e.target.dataset.id}?password=${password}`;
+      window.location.href =
+        `/room/${e.target.dataset.id}?password=${password}`;
     } else {
-      // eslint-disable-next-line no-restricted-globals
-      location.href = `/room/${e.target.dataset.id}`;
+      window.location.href = `/room/${e.target.dataset.id}`;
     }
   }
 
@@ -100,10 +96,8 @@
 {% block script %}
 <script>
   window.onload = () => {
-    // eslint-disable-next-line no-restricted-globals
-    if (new URL(location.href).searchParams.get('error')) {
-      // eslint-disable-next-line no-restricted-globals
-      alert(new URL(location.href).searchParams.get('error'));
+    if (new URL(window.location.href).searchParams.get('error')) {
+      alert(new URL(window.location.href).searchParams.get('error'));
     }
   };
 </script>
